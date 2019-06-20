@@ -6,15 +6,17 @@ use PhpParser\Node;
 use PhpParser\Node\Expr\Cast;
 use PHPStan\Analyser\Scope;
 use PHPStan\Rules\Rule;
+use PHPStan\Type\Constant\ConstantIntegerType;
+use PHPStan\Type\Constant\ConstantStringType;
 use RuntimeException;
 
 final class StrictCastsRule implements Rule
 {
     private const MATRIX = [
-        'Scalar_String->'  . Cast\Bool_::class   => 'stringToBool',
-        'Scalar_LNumber->' . Cast\Bool_::class   => 'intToBool',
-        'Scalar_String->'  . Cast\Int_::class    => 'stringToInt',
-        'Scalar_String->'  .  Cast\Double::class => 'stringToFloat',
+        ConstantStringType::class  . '->' . Cast\Bool_::class  => 'stringToBool',
+        ConstantIntegerType::class . '->' . Cast\Bool_::class  => 'intToBool',
+        ConstantStringType::class  . '->' . Cast\Int_::class   => 'stringToInt',
+        ConstantStringType::class  . '->' . Cast\Double::class => 'stringToFloat',
     ];
 
     public function getNodeType(): string
@@ -28,7 +30,7 @@ final class StrictCastsRule implements Rule
             throw new RuntimeException();
         }
 
-        $matrixKey = sprintf('%s->%s', $node->expr->getType(), get_class($node));
+        $matrixKey = sprintf('%s->%s', get_class($scope->getType($node->expr)), get_class($node));
 
         if (! isset(self::MATRIX[$matrixKey])) {
             return [];
