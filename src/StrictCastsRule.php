@@ -8,15 +8,17 @@ use PHPStan\Analyser\Scope;
 use PHPStan\Rules\Rule;
 use PHPStan\Type\Constant\ConstantIntegerType;
 use PHPStan\Type\Constant\ConstantStringType;
+use PHPStan\Type\IntegerType;
+use PHPStan\Type\StringType;
 use RuntimeException;
 
 final class StrictCastsRule implements Rule
 {
     private const MATRIX = [
-        ConstantStringType::class  . '->' . Cast\Bool_::class  => 'stringToBool',
-        ConstantIntegerType::class . '->' . Cast\Bool_::class  => 'intToBool',
-        ConstantStringType::class  . '->' . Cast\Int_::class   => 'stringToInt',
-        ConstantStringType::class  . '->' . Cast\Double::class => 'stringToFloat',
+        'string->' . Cast\Bool_::class  => 'stringToBool',
+        'int->'    . Cast\Bool_::class  => 'intToBool',
+        'string->' . Cast\Int_::class   => 'stringToInt',
+        'string->' . Cast\Double::class => 'stringToFloat',
     ];
 
     public function getNodeType(): string
@@ -30,7 +32,17 @@ final class StrictCastsRule implements Rule
             throw new RuntimeException();
         }
 
-        $matrixKey = sprintf('%s->%s', get_class($scope->getType($node->expr)), get_class($node));
+        $fromType = $scope->getType($node->expr);
+
+        if ($fromType instanceof StringType) {
+            $from = 'string';
+        } elseif ($fromType instanceof IntegerType) {
+            $from = 'int';
+        } else {
+            return [];
+        }
+
+        $matrixKey = sprintf('%s->%s', $from, get_class($node));
 
         if (! isset(self::MATRIX[$matrixKey])) {
             return [];

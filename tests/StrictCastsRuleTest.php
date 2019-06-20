@@ -32,6 +32,14 @@ final class StrictCastsRuleTest extends RuleTestCase
                 'Cannot use loose cast, use StrictCasts\\stringToFloat() instead',
                 6,
             ],
+            [
+                'Cannot use loose cast, use StrictCasts\\stringToBool() instead',
+                7,
+            ],
+            [
+                'Cannot use loose cast, use StrictCasts\\stringToBool() instead',
+                8,
+            ],
         ]);
     }
 }
