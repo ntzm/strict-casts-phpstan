@@ -1,0 +1,22 @@
+{
+    "name": "ntzm/strict-casts-phpstan",
+    "description": "PHPStan rule to ensure you're using strict casts wherever possible",
+    "license": "MIT",
+    "require": {
+        "nikic/php-parser": "^4.2",
+        "phpstan/phpstan": "^0.11.8"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^8.2"
+    },
+    "autoload": {
+        "psr-4": {
+            "StrictCastsPhpstan\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "StrictCastsPhpstanTest\\": "tests/"
+        }
+    }
+}
