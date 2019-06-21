@@ -17,27 +17,27 @@ final class StrictCastsRuleTest extends RuleTestCase
     {
         $this->analyse([__DIR__ . '/file.php'], [
             [
-                'Cannot use loose cast, use StrictCasts\\stringToBool() instead',
+                'Cannot use loose cast, use StrictCasts\\toBool() instead',
                 3,
             ],
             [
-                'Cannot use loose cast, use StrictCasts\\intToBool() instead',
+                'Cannot use loose cast, use StrictCasts\\toBool() instead',
                 4,
             ],
             [
-                'Cannot use loose cast, use StrictCasts\\stringToInt() instead',
+                'Cannot use loose cast, use StrictCasts\\toInt() instead',
                 5,
             ],
             [
-                'Cannot use loose cast, use StrictCasts\\stringToFloat() instead',
+                'Cannot use loose cast, use StrictCasts\\toFloat() instead',
                 6,
             ],
             [
-                'Cannot use loose cast, use StrictCasts\\stringToBool() instead',
+                'Cannot use loose cast, use StrictCasts\\toBool() instead',
                 7,
             ],
             [
-                'Cannot use loose cast, use StrictCasts\\stringToBool() instead',
+                'Cannot use loose cast, use StrictCasts\\toBool() instead',
                 8,
             ],
         ]);

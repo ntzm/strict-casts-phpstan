@@ -6,6 +6,3 @@
 (float) '1';
 (bool) substr('aaa', 1);
 (bool) random_bytes(6);
-
-// DON'T CATCH
-(bool) 1.1;

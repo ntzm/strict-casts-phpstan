@@ -6,21 +6,10 @@ use PhpParser\Node;
 use PhpParser\Node\Expr\Cast;
 use PHPStan\Analyser\Scope;
 use PHPStan\Rules\Rule;
-use PHPStan\Type\Constant\ConstantIntegerType;
-use PHPStan\Type\Constant\ConstantStringType;
-use PHPStan\Type\IntegerType;
-use PHPStan\Type\StringType;
 use RuntimeException;
 
 final class StrictCastsRule implements Rule
 {
-    private const MATRIX = [
-        'string->' . Cast\Bool_::class  => 'stringToBool',
-        'int->'    . Cast\Bool_::class  => 'intToBool',
-        'string->' . Cast\Int_::class   => 'stringToInt',
-        'string->' . Cast\Double::class => 'stringToFloat',
-    ];
-
     public function getNodeType(): string
     {
         return Cast::class;
@@ -32,22 +21,29 @@ final class StrictCastsRule implements Rule
             throw new RuntimeException();
         }
 
-        $fromType = $scope->getType($node->expr);
+        $preferredFunction = $this->getPreferredFunction($node);
 
-        if ($fromType instanceof StringType) {
-            $from = 'string';
-        } elseif ($fromType instanceof IntegerType) {
-            $from = 'int';
-        } else {
+        if ($preferredFunction === null) {
             return [];
         }
 
-        $matrixKey = sprintf('%s->%s', $from, get_class($node));
+        return ["Cannot use loose cast, use StrictCasts\\{$preferredFunction}() instead"];
+    }
 
-        if (! isset(self::MATRIX[$matrixKey])) {
-            return [];
+    private function getPreferredFunction(Cast $node): ?string
+    {
+        if ($node instanceof Cast\Bool_) {
+            return 'toBool';
         }
 
-        return [sprintf("Cannot use loose cast, use StrictCasts\\%s() instead", self::MATRIX[$matrixKey])];
+        if ($node instanceof Cast\Double) {
+            return 'toFloat';
+        }
+
+        if ($node instanceof Cast\Int_) {
+            return 'toInt';
+        }
+
+        return null;
     }
 }
